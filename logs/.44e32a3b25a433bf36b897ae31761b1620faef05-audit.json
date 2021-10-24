@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/couragekolawoleosemwengie/Desktop/projects/borg-test/logs/.44e32a3b25a433bf36b897ae31761b1620faef05-audit.json",
+    "files": [
+        {
+            "date": 1635075675600,
+            "name": "/Users/couragekolawoleosemwengie/Desktop/projects/borg-test/logs/2021-10-24.log",
+            "hash": "c52ec113b410d16bdb8bc1489716fa57"
+        }
+    ]
+}
