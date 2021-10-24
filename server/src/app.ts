@@ -2,9 +2,10 @@ import express, { Request, Response, NextFunction } from 'express';
 import Logger from './utils/Logger';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { environment } from './config';
+import { environment } from './config/constants';
 import routes from './api';
 import { NotFoundError, ApiError, InternalError } from './utils/ErrorHandler';
+import './config/db';
 
 process.on('uncaughtException', (e) => {
   Logger.error(e);

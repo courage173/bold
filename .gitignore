@@ -10,6 +10,7 @@ logs
 
 # ignore 3rd party lib
 node_modules
+/node_modules
 
 
 # Ignore built files

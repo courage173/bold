@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { environment } from '../config';
+import { environment } from '../config/constants';
 import { InternalErrorResponse, NotFoundResponse, BadRequestResponse } from './Response';
 
 enum ErrorType {
