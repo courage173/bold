@@ -35,8 +35,10 @@ app.use((req: Request, res: Response, next: NextFunction) => next(new NotFoundEr
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof ApiError) {
+    console.error(environment);
     ApiError.handle(err, res);
   } else {
+    console.error(environment);
     if (environment === 'development') {
       Logger.error(err);
       return res.status(500).send(err.message);
