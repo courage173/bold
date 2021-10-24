@@ -1,5 +1,5 @@
 import Logger from './utils/Logger';
-import { port } from './config';
+import { port } from './config/constants';
 import app from './app';
 
 app
