@@ -6,6 +6,7 @@ export interface IScholarship extends Document {
   amount: number;
   recipientNumber: number;
   sponsorId: string;
+  expiryDate: Date;
   updatedAt: Date;
   createdAt: Date;
 }
@@ -17,6 +18,7 @@ const ScholarshipSchema = new Schema(
     amount: Number,
     recipientNumber: Number,
     sponsorId: { type: String, ref: 'User' },
+    expiryDate: { type: Date },
     updatedAt: {
       type: Date,
     },

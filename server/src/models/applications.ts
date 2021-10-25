@@ -1,11 +1,9 @@
 import mongoose, { Schema, Document, Date } from 'mongoose';
 
 export interface IApplication extends Document {
-  name: string;
-  description: string;
-  amount: number;
-  recipientNumber: number;
-  sponsorId: string;
+  scholarshipId: string;
+  studentId: string;
+  awarded: boolean;
   updatedAt: Date;
   createdAt: Date;
 }
@@ -14,6 +12,7 @@ const ApplicationSchema = new Schema(
   {
     scholarshipId: { type: String, ref: 'Scholarships' },
     studentId: { type: String, ref: 'User' },
+    awarded: { type: Boolean, default: false },
     updatedAt: {
       type: Date,
     },

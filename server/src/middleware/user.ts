@@ -17,7 +17,23 @@ class User {
       req.user = decoded;
       return next();
     } catch (err) {
-      next(new UnAuthoriseError('Session Token must be present.'));
+      next(new UnAuthoriseError('Cannot access the resource.'));
+    }
+  }
+  public static async UserIsStudent(req: any, res: Response, next: NextFunction) {
+    const role = req.user.role;
+    if (role === 'student') {
+      return next();
+    } else {
+      next(new UnAuthoriseError('Cannot access the resource.'));
+    }
+  }
+  public static async UserIsSponsor(req: any, res: Response, next: NextFunction) {
+    const role = req.user.role;
+    if (role === 'sponsor') {
+      return next();
+    } else {
+      next(new UnAuthoriseError('Cannot access the resource.'));
     }
   }
 }
