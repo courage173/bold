@@ -42,6 +42,31 @@ export function validateStudentProfile(req: Request, res: Response, next: NextFu
   validateRequest(req, res, next, schema);
 }
 
+export function validateScholarship(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object({
+    description: Joi.string().required(),
+    name: Joi.string().required(),
+    recipientNumber: Joi.number().required(),
+    amount: Joi.number().required(),
+    expiryDate: Joi.date().required(),
+  });
+  validateRequest(req, res, next, schema);
+}
+
+export function validateApplication(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object({
+    scholarshipId: Joi.string().required(),
+  });
+  validateRequest(req, res, next, schema);
+}
+
+export function validateScholarshipAward(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object({
+    studentId: Joi.string().required(),
+  });
+  validateRequest(req, res, next, schema);
+}
+
 function validateRequest(req: Request, res: Response, next: NextFunction, schema: Schema) {
   const options = {
     abortEarly: false, // include all errors
