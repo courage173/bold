@@ -47,7 +47,11 @@ class UserService {
 
       data.jwtRefreshToken = randToken.uid(256);
 
-      user = await this.create(data);
+      try {
+        user = await this.create(data);
+      } catch (error: any) {
+        throw new InternalError(error.message);
+      }
       // create access token and refresh token.
       const authUserObj = {
         id: user._id,
@@ -68,8 +72,8 @@ class UserService {
         },
       };
       return authUserObj;
-    } catch (error: any) {
-      throw new InternalError(error);
+    } catch (error) {
+      throw error;
     }
   }
   public static async loginUser(data: IUser): Promise<any> {
@@ -77,10 +81,19 @@ class UserService {
       //
       data.email = data.email.toLowerCase();
 
-      const user = await this.findOneBy({ email: data.email });
+      let user;
+      try {
+        user = await this.findOneBy({ email: data.email });
+      } catch (error: any) {
+        throw new InternalError(error.message);
+      }
 
       if (!user) {
         throw new BadRequestError('User is not registered');
+      }
+      const isvalidPassowrd = await bcrypt.compare(user.password, data.password);
+      if (isvalidPassowrd) {
+        throw new BadRequestError('password is incorrect');
       }
       const authUserObj = {
         id: user._id,
@@ -102,7 +115,7 @@ class UserService {
       };
       return authUserObj;
     } catch (error: any) {
-      throw new InternalError(error);
+      throw error;
     }
   }
 }

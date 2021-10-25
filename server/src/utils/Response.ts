@@ -49,6 +49,12 @@ export class BadRequestResponse extends ApiResponse {
   }
 }
 
+export class UnAuthorisedResponse extends ApiResponse {
+  constructor(message = 'UnAuthorised') {
+    super(ResponseStatus.UNAUTHORIZED, message);
+  }
+}
+
 export class InternalErrorResponse extends ApiResponse {
   constructor(message = 'Internal Error') {
     super(ResponseStatus.INTERNAL_ERROR, message);

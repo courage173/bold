@@ -28,4 +28,4 @@ const SponsorProfileSchema = new Schema(
   { timestamps: true },
 );
 
-export default mongoose.model<IStudentProfile>('SponsorProfile', SponsorProfileSchema);
+export default mongoose.model<IStudentProfile>('StudentProfile', SponsorProfileSchema);
