@@ -21,6 +21,27 @@ export function validateLoginFields(req: Request, res: Response, next: NextFunct
   validateRequest(req, res, next, schema);
 }
 
+export function validateSponsorProfile(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object({
+    description: Joi.string(),
+    imageUrl: Joi.string(),
+  });
+  validateRequest(req, res, next, schema);
+}
+
+export function validateStudentProfile(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object({
+    description: Joi.string(),
+    dateOfBirth: Joi.string(),
+    phone: Joi.number(),
+    userId: Joi.string(),
+    nationality: Joi.string(),
+    address: Joi.string(),
+    imageUrl: Joi.string(),
+  });
+  validateRequest(req, res, next, schema);
+}
+
 function validateRequest(req: Request, res: Response, next: NextFunction, schema: Schema) {
   const options = {
     abortEarly: false, // include all errors

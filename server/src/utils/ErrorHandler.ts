@@ -1,6 +1,11 @@
 import { Response } from 'express';
 import { environment } from '../config/constants';
-import { InternalErrorResponse, NotFoundResponse, BadRequestResponse } from './Response';
+import {
+  InternalErrorResponse,
+  NotFoundResponse,
+  BadRequestResponse,
+  UnAuthorisedResponse,
+} from './Response';
 
 enum ErrorType {
   INTERNAL = 'InternalError',
@@ -8,6 +13,7 @@ enum ErrorType {
   NO_ENTRY = 'NoEntryError',
   NO_DATA = 'NoDataError',
   BAD_REQUEST = 'BadRequestError',
+  UNAUTHORIZED = 'UnAuthorisedError',
 }
 
 export abstract class ApiError extends Error {
@@ -19,6 +25,8 @@ export abstract class ApiError extends Error {
     switch (err.type) {
       case ErrorType.INTERNAL:
         return new InternalErrorResponse(err.message).send(res);
+      case ErrorType.UNAUTHORIZED:
+        return new UnAuthorisedResponse(err.message).send(res);
       case ErrorType.NOT_FOUND:
       case ErrorType.NO_ENTRY:
       case ErrorType.NO_DATA:
@@ -44,6 +52,12 @@ export class InternalError extends ApiError {
 export class BadRequestError extends ApiError {
   constructor(message = 'Bad Request') {
     super(ErrorType.BAD_REQUEST, message);
+  }
+}
+
+export class UnAuthoriseError extends ApiError {
+  constructor(message = 'UnAuthorised') {
+    super(ErrorType.UNAUTHORIZED, message);
   }
 }
 

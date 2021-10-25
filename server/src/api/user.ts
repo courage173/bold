@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import AsyncHandler from '../utils/AsyncHandler';
 import { SuccessResponse } from '../utils/Response';
 import { BadRequestError, InternalError } from '../utils/ErrorHandler';
-import UserService from '../services/user';
+import UserService from '../services/userService';
 import { validateRegisterFields, validateLoginFields } from '../middleware/validation';
 
 const router = express.Router();
