@@ -9,6 +9,7 @@ const Container = styled.div`
     box-shadow: 0px 2px 16px rgba(9, 44, 76, 0.1);
     border-radius: 8px;
     background-color: #fff;
+    margin: 20px 0;
 `;
 const CardTop = styled.div`
     border-bottom: 0.5px solid rgba(33, 33, 33, 0.1);
