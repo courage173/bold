@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-// import img from "../assets/images/profile.png";
+import user1 from '../assets/images/user1.png';
 import { withRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { history } from '../redux/store';
 import { BsFillAwardFill } from 'react-icons/bs';
@@ -28,7 +28,7 @@ const Container = styled.div`
 
 const ProfileSection = styled.div`
     height: 12rem;
-    background-color: #3a8dff;
+    /* background-color: #3a8dff; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,7 +51,7 @@ const LinkWrap = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 40px;
+    /* margin-top: 40px; */
 `;
 const LinkContainer = styled.a`
     padding: 20px;
@@ -82,51 +82,53 @@ const Sidebar = props => {
     const [active, setActive] = useState('dashboard');
     const currentLink = props.location.pathname;
     useEffect(() => {
-        setActive(currentLink.substring(1));
+        const link = currentLink?.substring(1).split('/')[1];
+        setActive(link);
     }, [currentLink]);
-
+    // eslint-disable-next-line no-console
+    console.log(active);
     const Links = [
         {
             name: 'Scholarships',
-            to: 'dashboard/scholarship',
+            to: 'scholarship',
             icon: (
                 <IoSchool
                     size={'30px'}
-                    color={active === 'dashboard/scholarship' && '#3a8dff'}
-                    opacity={active === 'dashboard/scholarship' ? '1' : '0.2'}
+                    color={active === 'scholarship' && '#3a8dff'}
+                    opacity={active === 'scholarship' ? '1' : '0.2'}
                 />
             ),
         },
         {
             name: 'Applications',
-            to: 'dashboard/application',
+            to: 'application',
             icon: (
                 <GoFileSubmodule
                     size={'30px'}
-                    color={active === 'dashboard/application' && '#3a8dff'}
-                    opacity={active === 'dashboard/application' ? '1' : '0.2'}
+                    color={active === 'application' && '#3a8dff'}
+                    opacity={active === 'application' ? '1' : '0.2'}
                 />
             ),
         },
         {
             name: 'Awarded',
-            to: 'dashboard/award',
+            to: 'award',
             icon: (
                 <BsFillAwardFill
                     size={'25px'}
-                    color={active === 'dashboard/award' && '#3a8dff'}
-                    opacity={active === 'dashboard/award' ? '1' : '0.2'}
+                    color={active === 'award' && '#3a8dff'}
+                    opacity={active === 'award' ? '1' : '0.2'}
                 />
             ),
         },
         {
             name: 'Profile',
-            to: 'dashboard/profile',
+            to: 'profile',
             icon: (
                 <FaUserAlt
                     size={'25px'}
-                    color={active === 'dashboard/profile' && '#3a8dff'}
-                    opacity={active === 'dashboard/profile' ? '1' : '0.2'}
+                    color={active === 'profile' && '#3a8dff'}
+                    opacity={active === 'profile' ? '1' : '0.2'}
                 />
             ),
         },
@@ -150,7 +152,7 @@ const Sidebar = props => {
     return (
         <Container toggle={props.toggle}>
             <ProfileSection>
-                <Image src={user.image} />
+                <Image src={user1} />
                 <Para>
                     {user.role === 'user'
                         ? user.firstName + ' ' + user.lastName
@@ -174,11 +176,11 @@ const Sidebar = props => {
                                 // color: active === link.to && "#fff",
                             }}
                             key={i}
+                            onClick={() => history.push(link.to)}
                         >
                             <LinkContent>
                                 {link.icon}
-                                <Link
-                                    to={`/${link.to}`}
+                                <div
                                     style={{
                                         textDecoration: 'none',
                                         color: '#000',
@@ -187,7 +189,7 @@ const Sidebar = props => {
                                     }}
                                 >
                                     {link.name}
-                                </Link>
+                                </div>
                             </LinkContent>
                         </LinkContainer>
                     );

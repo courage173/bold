@@ -2,14 +2,14 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import DashboardLayout from '../../HOC/DashboardLayout';
-import ScholarshipCard from './ScholarshipCard';
+import ScholarshipCard from '../scholarship/ScholarshipCard';
 
 const Container = styled.div`
     padding: 40px;
 `;
-function Scholarship(props) {
+function Award(props) {
     return (
-        <DashboardLayout title={'Scholarships'}>
+        <DashboardLayout title={'Submitted'}>
             <Container>
                 {[1, 2, 3, 4].map(k => (
                     <ScholarshipCard key={k} />
@@ -19,5 +19,5 @@ function Scholarship(props) {
     );
 }
 
-Scholarship.displayName = 'Scholarship';
-export default Scholarship;
+Award.displayName = 'Award';
+export default Award;

@@ -76,15 +76,6 @@ const ChildrenWrap = styled.div`
     }
 `;
 
-const RoyaltyPoint = styled.div`
-    transform: skewX(-10deg);
-    background-color: red;
-    padding: 10px;
-    margin-left: 5px;
-    color: #fff;
-    margin-right: 20px;
-`;
-
 const MenuBars = styled.div`
     display: flex;
     flex-direction: column;
