@@ -14,7 +14,6 @@ const FieldSet = styled.fieldset`
     }
 `;
 const Legend = styled.legend`
-    font-family: 'Open Sans, sans-serif';
     font-style: normal;
     font-weight: 600;
     font-size: 12px;
@@ -31,6 +30,22 @@ const Input = styled.input`
     outline: none;
     margin-top: -3px;
     font-size: 16px;
+    @media (max-width: 768px) {
+        box-shadow: #f5f5f5 0px 0px 0px 9999px inset;
+    }
+`;
+const DefaultInput = styled.input`
+    box-shadow: #fff 0px 0px 0px 9999px inset;
+    width: 100%;
+    height: 2rem;
+    margin: 0;
+    padding: 0;
+    padding-left: 5px;
+    border: 1.8px solid #b0b0b0;
+    outline: none;
+    margin-top: -3px;
+    font-size: 16px;
+    margin-top: 5px;
     @media (max-width: 768px) {
         box-shadow: #f5f5f5 0px 0px 0px 9999px inset;
     }
@@ -76,7 +91,8 @@ function FormField({ formdata, change, id, FieldSetWidth }) {
             case 'input':
                 template = (
                     <div>
-                        <Input
+                        <Legend>{formdata.config.label}</Legend>
+                        <DefaultInput
                             {...formdata.config}
                             value={formdata.value}
                             onBlur={event => change({ event, id, blur: true })}
