@@ -106,7 +106,7 @@ const AuthLayout = props => {
         }
     });
     const handleRoute = () => {
-        history.push(props.login ? '/' : '/login');
+        history.push(props.login ? '/register' : '/');
     };
 
     return (

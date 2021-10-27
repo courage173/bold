@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
+import { bindActionCreators } from 'redux';
 import Sidebar from '../components/Sidebar';
 import Backdrop from '../utils/Backdrop';
 import { connect } from 'react-redux';
-import RewardModal from '../components/modals/RewardModal';
+import CreateScholarship from '../components/modals/CreateScholarship';
 import PropTypes from 'prop-types';
 import Fade from 'react-reveal/Fade';
+import MyButton from '../utils/Button';
+import { toggleModal } from '../redux/actions/ui';
 
 const Container = styled.div`
     width: 100%;
@@ -22,7 +25,7 @@ const Header = styled.div`
     display: flex;
     background: #ffffff;
     z-index: 99;
-    padding-left: 21rem;
+
     box-shadow: 0px 4px 4px rgba(93, 130, 31, 0.3);
     @media (max-width: 768px) {
         top: 0;
@@ -100,7 +103,7 @@ const DashboardLayout = props => {
     const [toggleSideBar, setToggle] = useState(false);
     return (
         <Container>
-            <RewardModal />
+            <CreateScholarship />
             {toggleSideBar ? (
                 <Backdrop runAction={() => setToggle(false)} />
             ) : null}
@@ -111,25 +114,31 @@ const DashboardLayout = props => {
                 }}
             >
                 <Header>
-                    <MenuBars onClick={() => setToggle(!toggleSideBar)}>
-                        <MenuBar></MenuBar>
-                        <MenuBar></MenuBar>
-                        <MenuBar></MenuBar>
-                    </MenuBars>
+                    <div
+                        style={{
+                            display: 'flex',
+                            padding: '0 13rem',
+                            width: '100%',
+                            justifyContent: 'space-between',
+                            paddingRight: '3rem',
+                        }}
+                    >
+                        <MenuBars onClick={() => setToggle(!toggleSideBar)}>
+                            <MenuBar></MenuBar>
+                            <MenuBar></MenuBar>
+                            <MenuBar></MenuBar>
+                        </MenuBars>
 
-                    <HeadTextWrap>
-                        <H4> {props.title}</H4>
-                    </HeadTextWrap>
-                    <HeadText>
-                        {/* <div>
-                            <H4>
-                                Total Loyalty points -{' '}
-                                <RoyaltyPoint>
-                                    {props.user && props.user.loyalty}
-                                </RoyaltyPoint>
-                            </H4>
-                        </div> */}
-                    </HeadText>
+                        <HeadTextWrap>
+                            <H4> {props.title}</H4>
+                        </HeadTextWrap>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <MyButton
+                                title={'Create Scholarship'}
+                                runAction={() => props.toggleModal([])}
+                            />
+                        </div>
+                    </div>
                 </Header>
                 <Fade>
                     <ChildrenWrap>{props.children}</ChildrenWrap>
@@ -142,7 +151,7 @@ const DashboardLayout = props => {
 DashboardLayout.displayName = 'DashboardLayout';
 DashboardLayout.propTypes = {
     children: PropTypes.node,
-
+    toggleModal: PropTypes.func,
     title: PropTypes.string,
 };
 const mapStateToProps = state => {
@@ -150,4 +159,8 @@ const mapStateToProps = state => {
         user: state.user.user,
     };
 };
-export default connect(mapStateToProps)(DashboardLayout);
+
+const mapDispatchToProps = dispatch =>
+    bindActionCreators({ toggleModal }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardLayout);

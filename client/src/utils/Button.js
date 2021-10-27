@@ -17,7 +17,7 @@ const Button = styled.button`
     transition: 0.17s ease-in;
     cursor: pointer;
     &:hover {
-        background-color: ${props => (props.secBg ? '#1058bb' : '#0d5ece')};
+        background-color: ${props => (props.secBg ? props.secBg : '#0d5ece')};
         color: #fff;
     }
     @media (max-width: 768px) {
@@ -37,6 +37,7 @@ const MyButton = props => {
             width={props.width}
             height={props.height}
             font={props.font}
+            secBg={props.secBg}
             mobileWidth={props.mobileWidth}
             Mfont={props.Mfont}
             mobileHeight={props.mobileHeight}
@@ -62,6 +63,7 @@ MyButton.propTypes = {
     mobileWidth: PropTypes.string,
     Mfont: PropTypes.string,
     mobileHeight: PropTypes.string,
+    secBg: PropTypes.string,
     title: PropTypes.string,
     requesting: PropTypes.bool,
 };

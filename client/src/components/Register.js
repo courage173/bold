@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -84,6 +86,7 @@ const ButtonContainer = styled.div`
 `;
 
 const Register = props => {
+    const [sponsor, setSponsor] = useState(false);
     const [userForm, setUserForm] = useState({
         formdata: {
             email: {
@@ -176,7 +179,6 @@ const Register = props => {
             },
         },
     });
-    const switchForm = props.switchForm === 'brand';
 
     const updateForm = element => {
         const formdata = userForm.formdata;
@@ -192,8 +194,8 @@ const Register = props => {
         const isValid = isFormValid(form);
         if (isValid) {
             const data = generateData(form);
-            if (switchForm) {
-                data.role = 'brand';
+            if (sponsor) {
+                data.role = 'sponsor';
             } else {
                 data.role = 'user';
             }
@@ -263,7 +265,11 @@ const Register = props => {
             </FormContainer>
             <CheckBoxContainer>
                 <div>
-                    <input type="checkbox" checked={false} />
+                    <input
+                        type="checkbox"
+                        checked={sponsor}
+                        onChange={e => setSponsor(!sponsor)}
+                    />
                     <span>Join as Sponsor</span>
                 </div>
             </CheckBoxContainer>
@@ -286,7 +292,13 @@ const Register = props => {
                         mobileWidth={'19rem'}
                         font={'17px'}
                         width={'27rem'}
+                        requesting={props.requesting}
                     />
+                    <div>
+                        <span style={{ color: 'red' }}>
+                            {props.register.error}
+                        </span>
+                    </div>
                     <AccountWrap>
                         <Span>Already have an account?</Span>
                         <Span>
@@ -309,12 +321,14 @@ const Register = props => {
 
 Register.displayName = 'Register';
 Register.propTypes = {
-    switchForm: PropTypes.string,
     registerUser: PropTypes.func,
+    requesting: PropTypes.bool,
+    register: PropTypes.object,
 };
 const mapStateToProps = state => {
     return {
-        switchForm: state.ui.toggleForm,
+        register: state.user.registerUser,
+        requesting: state.user.registerUser.requesting,
     };
 };
 const mapDispatchToProps = dispatch =>

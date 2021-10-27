@@ -180,6 +180,9 @@ const Login = props => {
                         width={'27rem'}
                     />
                 </ButtonContainer>
+                <div>
+                    <span style={{ color: 'red' }}>{props.login.error}</span>
+                </div>
                 <AccountWrap>
                     <Span>Don&#39t have an account?</Span>
                     <Span>
@@ -203,12 +206,13 @@ Login.displayName = 'Login';
 Login.propTypes = {
     loginUser: PropTypes.func,
     requesting: PropTypes.bool,
+    login: PropTypes.object,
 };
 const mapStateToProps = state => {
     return {
         switchForm: state.ui.toggleForm,
-        login: state.user.login,
-        requesting: state.user.login.requesting,
+        login: state.user.loginUser,
+        requesting: state.user.loginUser.requesting,
     };
 };
 

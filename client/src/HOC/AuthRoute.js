@@ -1,34 +1,56 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { getUser } from '../redux/actions/user';
 import PropTypes from 'prop-types';
+import { User } from '../config';
+import { history } from '../redux/store';
 
-function AuthRoute(ComposedClass) {
-    class AuthenticationCheck extends Component {
-        componentDidMount() {
-            this.props.getUser();
+export default function(ComposedComponent) {
+    class Authentication extends Component {
+        constructor(props) {
+            super(props);
+            this.props = props;
+
+            this.isAuthenticated = User.isLoggedIn();
         }
+
+        componentDidMount() {
+            if (!this.isAuthenticated) {
+                history.push('/login', {
+                    continue: this.props.location.pathname,
+                });
+            }
+        }
+
+        componentDidUpdate() {
+            if (!this.isAuthenticated) {
+                history.push('/login', {
+                    continue: this.props.location.pathname,
+                });
+            }
+        }
+
+        PropTypes = {
+            router: PropTypes.object,
+        };
 
         render() {
-            return <ComposedClass {...this.props} />;
+            return <ComposedComponent {...this.props} />;
         }
     }
 
-    AuthenticationCheck.displayName = 'AuthenticationCheck';
-    AuthenticationCheck.propTypes = {
-        getUser: PropTypes.func,
+    Authentication.propTypes = {
+        location: PropTypes.object,
     };
-    function mapStateToProps(state) {
-        return {
-            user: state.user.user,
-        };
+
+    Authentication.displayName = 'RequireAuth';
+
+    function mapStateToProps() {
+        return {};
     }
 
-    const mapDispatchToProps = dispatch =>
-        bindActionCreators({ getUser }, dispatch);
+    function mapDispatchToProps() {
+        return {};
+    }
 
-    return connect(mapStateToProps, mapDispatchToProps)(AuthenticationCheck);
+    return connect(mapStateToProps, mapDispatchToProps)(Authentication);
 }
-
-export default AuthRoute;
