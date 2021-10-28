@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unused-prop-types */
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import MyButton from '../../utils/Button';
@@ -9,6 +7,10 @@ import { toggleModal } from '../../redux/actions/ui';
 import PropTypes from 'prop-types';
 import FormField from '../../utils/form/Form';
 import { update, generateData, isFormValid } from '../../utils/form/formAction';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { toast } from 'react-toastify';
+import { createScholarship } from '../../redux/actions/scholarship';
 
 const Container = styled.div`
     margin: 0 auto;
@@ -25,7 +27,7 @@ const Container = styled.div`
 `;
 const ModalContainer = styled.div`
     width: 40rem;
-    height: 25rem;
+    height: 34rem;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0px 6px 12px rgba(8, 35, 48, 0.14);
@@ -35,45 +37,6 @@ const ModalContainer = styled.div`
     transform: ${props => (props.open ? 'translateY(0)' : 'translateY(20px)')};
 `;
 
-const Input = styled.input`
-    width: 6rem;
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-    height: 2rem;
-    outline: none;
-    padding: 3px;
-    border: none;
-`;
-const H5 = styled.h4`
-    font-size: 24px;
-    line-height: 5px;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 10px;
-    text-align: center;
-    @media (max-width: 768px) {
-        font-size: 20px;
-    }
-`;
-const CloseBtn = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -15px;
-    color: #b0b0b0;
-`;
-const Button = styled.div`
-    width: 15px;
-    height: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background: red;
-    color: white;
-    cursor: pointer;
-`;
 const HeaderContainer = styled.div`
     background: #ffffff;
     /* box-shadow: 0px 8px 40px rgba(9, 44, 76, 0.16); */
@@ -86,13 +49,21 @@ const HeaderTitle = styled.h5`
     font-weight: 600;
     margin: 0;
 `;
+const Legend = styled.legend`
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+    margin-bottom: 10px;
+`;
 function CreateScholarship(props) {
-    const [point, setPoint] = useState(0);
     const modalOpen = props.modalOpen;
+    const [startDate, setStartDate] = useState(new Date());
 
     const updateForm = element => {
         const formdata = userForm.formdata;
-        const newFormdata = update(element, formdata, 'register');
+        const newFormdata = update(element, formdata);
 
         setUserForm({
             formError: false,
@@ -171,8 +142,39 @@ function CreateScholarship(props) {
                 validationMessage: '',
                 showlabel: true,
             },
+            category: {
+                element: 'input',
+                value: '',
+                config: {
+                    name: 'recipent_input',
+                    type: 'text',
+                    placeholder: 'Enter Max Recipient',
+                    label: 'Category',
+                },
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+                validationMessage: '',
+                showlabel: true,
+            },
         },
     });
+
+    const handleSubmit = () => {
+        const form = userForm.formdata;
+        const isValid = isFormValid(form);
+        if (isValid && startDate) {
+            const data = generateData(form);
+            data.expiryDate = startDate;
+            props.createScholarship(data).then(() => {
+                props.toggleModal([]);
+            });
+        } else {
+            toast.error('form is invalid');
+        }
+    };
 
     return (
         <Container open={modalOpen} onClick={() => props.toggleModal([])}>
@@ -216,6 +218,25 @@ function CreateScholarship(props) {
                     </div>
                     <div style={{ marginBottom: '10px' }}>
                         <FormField
+                            id={'category'}
+                            formdata={userForm.formdata.category}
+                            change={element => updateForm(element)}
+                            styles={{
+                                marginTop: '0 20px',
+                            }}
+                            FieldSetWidth="27rem"
+                        />
+                    </div>
+                    <div style={{ marginBottom: '10px' }}>
+                        <Legend>Scholarship Deadline</Legend>
+                        <DatePicker
+                            selected={startDate}
+                            onChange={date => setStartDate(date)}
+                            style={{ marginTop: '10px' }}
+                        />
+                    </div>
+                    <div style={{ marginBottom: '10px' }}>
+                        <FormField
                             id={'recipientNumber'}
                             formdata={userForm.formdata.recipientNumber}
                             change={element => updateForm(element)}
@@ -239,7 +260,12 @@ function CreateScholarship(props) {
                                 runAction={() => props.toggleModal([])}
                             />
                         </div>
-                        <MyButton title="Submit" width="5rem" height="2rem" />
+                        <MyButton
+                            title="Submit"
+                            width="5rem"
+                            height="2rem"
+                            runAction={() => handleSubmit()}
+                        />
                     </div>
                 </div>
             </ModalContainer>
@@ -250,18 +276,15 @@ function CreateScholarship(props) {
 CreateScholarship.displayName = 'CreateScholarship';
 CreateScholarship.propTypes = {
     modalOpen: PropTypes.bool,
-    users: PropTypes.array,
     toggleModal: PropTypes.func,
-    rewardLoyalty: PropTypes.func,
+    createScholarship: PropTypes.func,
 };
 const mapStateToProps = state => {
     return {
         modalOpen: state.ui.modalOpen,
-        brand: state.user.user,
-        users: state.ui.users,
     };
 };
 const mapDispatchToProps = dispatch =>
-    bindActionCreators({ toggleModal }, dispatch);
+    bindActionCreators({ toggleModal, createScholarship }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateScholarship);

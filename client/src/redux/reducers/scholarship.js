@@ -1,95 +1,97 @@
-import * as types from '../constants/user';
+import * as types from '../constants/scholarship';
 const initialState = {
-    registerUser: {
+    createScholarship: {
         requesting: false,
         error: null,
         success: false,
     },
-    loginUser: {
+    getScholarships: {
         requesting: false,
         error: null,
         success: false,
     },
-    getUser: {
+    singleScholarship: {
         requesting: false,
         error: null,
         success: false,
     },
-    user: {},
+    scholarships: [],
+    scholarship: {},
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
-        case types.REGISTER_REQUEST:
+        case types.CREATE_SCHOLARSHIP_REQUEST:
             return Object.assign({}, state, {
-                registerUser: {
+                createScholarship: {
                     requesting: true,
                     error: null,
                     success: false,
                 },
             });
-        case types.REGISTER_SUCCESS:
+        case types.CREATE_SCHOLARSHIP_SUCCESS:
             return Object.assign({}, state, {
-                registerUser: {
+                createScholarship: {
                     requesting: false,
                     error: null,
                     success: true,
                 },
-                user: action.payload,
+                scholarship: action.payload,
+                scholarships: [action.payload, ...state.scholarships],
             });
-        case types.REGISTER_FAILURE:
+        case types.CREATE_SCHOLARSHIP_FAILURE:
             return Object.assign({}, state, {
-                registerUser: {
+                createScholarship: {
                     requesting: false,
                     error: action.payload,
-                    success: true,
+                    success: false,
                 },
             });
-        case types.LOGIN_REQUEST:
+        case types.GET_SCHOLARSHIPS_REQUEST:
             return Object.assign({}, state, {
-                loginUser: {
+                getScholarships: {
                     requesting: true,
                     error: null,
                     success: false,
                 },
             });
-        case types.LOGIN_SUCCESS:
+        case types.GET_SCHOLARSHIPS_SUCCESS:
             return Object.assign({}, state, {
-                loginUser: {
+                getScholarships: {
                     requesting: false,
                     error: null,
                     success: true,
                 },
-                user: action.payload,
+                scholarships: action.payload,
             });
-        case types.LOGIN_FAILURE:
+        case types.GET_SCHOLARSHIPS_FAILURE:
             return Object.assign({}, state, {
-                loginUser: {
+                getScholarships: {
                     requesting: false,
                     error: action.payload,
-                    success: true,
+                    success: false,
                 },
             });
-        case types.GET_USER_REQUEST:
+        case types.GET_SINGLE_SCHOLARSHIP_REQUEST:
             return Object.assign({}, state, {
-                getUser: {
+                singleScholarship: {
                     requesting: true,
                     error: null,
                     success: false,
                 },
             });
-        case types.GET_USER_SUCCESS:
+        case types.GET_SINGLE_SCHOLARSHIP_SUCCESS:
             return Object.assign({}, state, {
-                getUser: {
+                singleScholarship: {
                     requesting: false,
                     error: null,
                     success: true,
                 },
-                user: action.payload,
+                scholarship: action.payload,
             });
-        case types.GET_USER_FAILURE:
+        case types.GET_SINGLE_SCHOLARSHIP_FAILURE:
             return Object.assign({}, state, {
-                getUser: {
+                singleScholarship: {
                     requesting: false,
                     error: action.payload,
                     success: false,

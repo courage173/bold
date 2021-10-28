@@ -39,6 +39,7 @@ const DefaultInput = styled.input`
     width: 100%;
     height: 2rem;
     margin: 0;
+    border-radius: 4px;
     padding: 0;
     padding-left: 5px;
     border: 1.8px solid #b0b0b0;
