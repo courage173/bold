@@ -70,7 +70,8 @@ export function loginError(error) {
 export function loginSuccess(payload) {
     const accessToken = payload.tokens?.jwtAccessToken;
     User.setAccessToken(accessToken);
-    User.setName(payload.name);
+    User.setFirstName(payload.firstName);
+    User.setLastName(payload.lastName);
     User.setEmail(payload.email);
     User.setUserId(payload.id);
     return {
@@ -92,7 +93,9 @@ export function loginUser(data) {
         dispatch(loginRequest());
         promise.then(
             function(payload) {
-                dispatch(loginSuccess(payload.data));
+                // eslint-disable-next-line no-console
+                console.log(payload);
+                dispatch(loginSuccess(payload.data?.data));
                 history.push('/dashboard/scholarship');
             },
             function(error) {
@@ -141,7 +144,7 @@ export function getUser() {
         dispatch(getUserRequest());
         promise.then(
             function(payload) {
-                dispatch(getUserSuccess(payload.data));
+                dispatch(getUserSuccess(payload.data?.data));
             },
             function(error) {
                 if (error && error.response && error.response.data)

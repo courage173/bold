@@ -18,15 +18,23 @@ const Routes = () => {
             <Route
                 exact
                 path="/dashboard/scholarship"
-                component={ScholarshipPage}
+                component={AuthRoute(ScholarshipPage)}
             />
-            <Route exact path="/dashboard/profile" component={ProfilePage} />
+            <Route
+                exact
+                path="/dashboard/profile"
+                component={AuthRoute(ProfilePage)}
+            />
             <Route
                 exact
                 path="/dashboard/application"
-                component={ApplicationPage}
+                component={AuthRoute(ApplicationPage)}
             />
-            <Route exact path="/dashboard/award" component={AwardPage} />
+            <Route
+                exact
+                path="/dashboard/award"
+                component={AuthRoute(AwardPage)}
+            />
         </Switch>
     );
 };

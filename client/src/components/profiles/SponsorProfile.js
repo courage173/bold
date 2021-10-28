@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from '@emotion/styled';
 import DashboardLayout from '../../HOC/DashboardLayout';
 import user from '../../assets/images/user1.png';
 import MyButton from '../../utils/Button';
+import PropTypes from 'prop-types';
 
 const Container = styled.div`
     padding: 40px;
@@ -49,7 +51,7 @@ const OverviewPara = styled.p`
     line-height: 20px;
     color: #4f4f4f;
 `;
-function SponsorProfile() {
+function SponsorProfile(props) {
     return (
         <DashboardLayout title={'Profile'}>
             <Container>
@@ -61,12 +63,15 @@ function SponsorProfile() {
                         >
                             <NameDiv>
                                 <span style={{ color: '#4F4F4F' }}>
-                                    Name: Courage Osemwengie{' '}
+                                    Name:{' '}
+                                    {props.user.firstName +
+                                        ' ' +
+                                        props.user.lastName}
                                 </span>
                             </NameDiv>
                             <NameDiv>
                                 <span style={{ color: '#4F4F4F' }}>
-                                    Email: courageosemwengie@gmail.com
+                                    Email: {props.user.email}
                                 </span>
                             </NameDiv>
                         </div>
@@ -124,4 +129,13 @@ function SponsorProfile() {
 }
 
 SponsorProfile.displayName = 'SSponsorProfile';
-export default SponsorProfile;
+SponsorProfile.propTypes = {
+    user: PropTypes.object,
+};
+
+const mapStateToProps = state => {
+    return {
+        user: state.user.user,
+    };
+};
+export default connect(mapStateToProps)(SponsorProfile);

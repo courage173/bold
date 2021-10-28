@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt';
 import randToken from 'rand-token';
 import jwt from 'jsonwebtoken';
 import { jwtSecretKey, saltRounds } from '../config/constants';
-import { BadRequestError, InternalError } from '../utils/ErrorHandler';
+import { BadRequestError, InternalError, NotFoundError } from '../utils/ErrorHandler';
+import { JwtPayload } from '../interface/jwt-payload';
 
 class UserService {
   public static async create(data: IUser): Promise<IUser> {
@@ -114,6 +115,17 @@ class UserService {
         },
       };
       return authUserObj;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+  public static async getUser(payload: JwtPayload): Promise<IUser> {
+    try {
+      const user = await UserModel.findOne({ _id: payload.id }).select('-password');
+      if (!user) {
+        throw new NotFoundError('user not found');
+      }
+      return user;
     } catch (error: any) {
       throw error;
     }

@@ -8,13 +8,12 @@ class Scholarshipervice {
   public static async create(payload: JwtPayload, data: IScholarship): Promise<IScholarship> {
     try {
       //
-      if (payload.role !== 'sponsor') {
-        throw new BadRequestError('only a sponsor can create a scholarship');
-      }
+
       const scholarshipModel = new ScholarshipModel();
       scholarshipModel.name = data.name;
       scholarshipModel.description = data.description;
       scholarshipModel.recipientNumber = data.recipientNumber;
+      scholarshipModel.category = data.category;
       scholarshipModel.amount = data.amount;
       scholarshipModel.sponsorId = payload.id;
 

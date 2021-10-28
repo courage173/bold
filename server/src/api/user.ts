@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import AsyncHandler from '../utils/AsyncHandler';
 import { SuccessResponse } from '../utils/Response';
-import { BadRequestError, InternalError } from '../utils/ErrorHandler';
 import UserService from '../services/userService';
 import { validateRegisterFields, validateLoginFields } from '../middleware/validation';
+import User from '../middleware/user';
 
 const router = express.Router();
 
@@ -23,6 +23,16 @@ router.post(
   AsyncHandler(async (req: Request, res: Response) => {
     //call the login service
     const data = await UserService.loginUser(req.body);
+    new SuccessResponse('success', data).send(res);
+  }),
+);
+
+router.get(
+  '/profile',
+  User.getUser,
+  AsyncHandler(async (req: any, res: Response) => {
+    //call the login service
+    const data = await UserService.getUser(req.user);
     new SuccessResponse('success', data).send(res);
   }),
 );

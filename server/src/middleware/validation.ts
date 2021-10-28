@@ -47,6 +47,7 @@ export function validateScholarship(req: Request, res: Response, next: NextFunct
     description: Joi.string().required(),
     name: Joi.string().required(),
     recipientNumber: Joi.number().required(),
+    category: Joi.string().required(),
     amount: Joi.number().required(),
     expiryDate: Joi.date().required(),
   });
