@@ -41,7 +41,7 @@ class UserService {
     try {
       data.email = data.email.toLowerCase();
 
-      let user = await this.findOneBy({ email: data.email });
+      let user = await UserModel.findOne({ email: data.email });
 
       if (user) {
         throw new BadRequestError('User email is taken');

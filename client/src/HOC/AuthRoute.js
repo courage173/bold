@@ -6,6 +6,7 @@ import { User } from '../config';
 import { history } from '../redux/store';
 import { getUser, getUserProfile } from '../redux/actions/user';
 import { getScholarships } from '../redux/actions/scholarship';
+import { getApplication } from '../redux/actions/application';
 
 export default function(ComposedComponent) {
     class Authentication extends Component {
@@ -18,13 +19,13 @@ export default function(ComposedComponent) {
 
         componentDidMount() {
             this.props.getUser().then(() => {
-                // console.log('running');
                 this.props.getUserProfile();
                 this.props.getScholarships();
+                this.props.getApplication();
             });
 
             if (!this.isAuthenticated) {
-                history.push('/login', {
+                history.push('/', {
                     continue: this.props.location.pathname,
                 });
             }
@@ -32,7 +33,7 @@ export default function(ComposedComponent) {
 
         componentDidUpdate() {
             if (!this.isAuthenticated) {
-                history.push('/login', {
+                history.push('/', {
                     continue: this.props.location.pathname,
                 });
             }
@@ -52,6 +53,7 @@ export default function(ComposedComponent) {
         getUser: PropTypes.func.isRequired,
         getUserProfile: PropTypes.func.isRequired,
         getScholarships: PropTypes.func.isRequired,
+        getApplication: PropTypes.func.is,
     };
 
     Authentication.displayName = 'RequireAuth';
@@ -63,7 +65,7 @@ export default function(ComposedComponent) {
     };
     const mapDispatchToProps = dispatch =>
         bindActionCreators(
-            { getUser, getUserProfile, getScholarships },
+            { getUser, getUserProfile, getScholarships, getApplication },
             dispatch
         );
 

@@ -197,7 +197,7 @@ const Register = props => {
             if (sponsor) {
                 data.role = 'sponsor';
             } else {
-                data.role = 'user';
+                data.role = 'student';
             }
             props.registerUser(data);
         } else {

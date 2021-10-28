@@ -22,9 +22,8 @@ router.post(
 router.get(
   '/',
   User.getUser,
-  validateApplication,
   AsyncHandler(async (req: any, res: Response): Promise<any> => {
-    const data = await ApplicationService.findBy({ studentId: req.user.id });
+    const data = await ApplicationService.findUserApplications({ studentId: req.user.id });
     new SuccessResponse('success', data).send(res);
   }),
 );
