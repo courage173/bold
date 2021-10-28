@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import { bindActionCreators } from 'redux';
 import styled from '@emotion/styled';
 import DashboardLayout from '../../HOC/DashboardLayout';
 import user from '../../assets/images/user1.png';
 import MyButton from '../../utils/Button';
 import PropTypes from 'prop-types';
+import { toggleModal } from '../../redux/actions/ui';
 
 const Container = styled.div`
     padding: 40px;
@@ -52,8 +55,14 @@ const OverviewPara = styled.p`
     color: #4f4f4f;
 `;
 function SponsorProfile(props) {
+    const [modalId] = useState(uuidv4());
+    const [sponsorDescriptionModalId] = useState(uuidv4());
     return (
-        <DashboardLayout title={'Profile'}>
+        <DashboardLayout
+            title={'Profile'}
+            editSponsorModalId={modalId}
+            sponsorDescriptionModalId={sponsorDescriptionModalId}
+        >
             <Container>
                 <ProfileContainer>
                     <ProfileImageWrap>
@@ -77,50 +86,40 @@ function SponsorProfile(props) {
                         </div>
                     </ProfileImageWrap>
                     <div>
-                        <MyButton title="Edit Profile" />
+                        <MyButton
+                            title="Edit Profile"
+                            runAction={() => props.toggleModal(modalId)}
+                        />
                     </div>
                 </ProfileContainer>
                 <ContentWrap>
-                    <div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
                         <OverviewHeader>Overview</OverviewHeader>
+                        <MyButton
+                            title="Update"
+                            runAction={() =>
+                                props.toggleModal(sponsorDescriptionModalId)
+                            }
+                            width="5rem"
+                            height="2rem"
+                        />
                     </div>
                     <div>
-                        <OverviewPara>
-                            My name is Diane Donor. I received a world-class
-                            education, graduating from Princeton University with
-                            a degree in Chemical Engineering. My education was
-                            paid for by my family, which allowed me to begin my
-                            career on amazing footing. After graduating, I
-                            leveraged my education and passion for
-                            entrepreneurship, technology, and engineering to
-                            design power plants that intake municipal solid
-                            wastes (trash) and convert them to liquid
-                            transportation fuels, in a cost-efficient,
-                            zero-emission process. These plants allow us to
-                            recycle trash into fuel for cars and other types of
-                            transport. I used this technology to build a
-                            successful company, RecyCorp, that now operates on a
-                            global scale, and has a huge impact in minimizing
-                            waste and CO2 emissions, and in moving us to more
-                            sustainable energy sources. All of this would not
-                            have been possible without my education, and I’d
-                            like to use the platform I’ve built to give back to
-                            the next generation. I believe that there are many
-                            students out there who are capable of driving the
-                            next innovations in sustainable energy, and I’d like
-                            to make sure they get that chance. As my way of
-                            giving back, I’d like to create the Diane Donor
-                            Sustainable Energy Scholarship, which will award
-                            $50,000 / year to a student pursuing innovative
-                            research in sustainable energy, recycling, or other
-                            impactful environmental causes. In addition, I’d
-                            like to be able to contribute funding to other
-                            scholarships that have been created in the
-                            sustainable energy space, and I’d like to be able to
-                            clearly and easily see the impact that the
-                            scholarships I’m involved with have had for
-                            recipients.
-                        </OverviewPara>
+                        {props.profile._id ? (
+                            <OverviewPara>
+                                {props.profile.description}
+                            </OverviewPara>
+                        ) : (
+                            <OverviewPara>
+                                Please Update your profile
+                            </OverviewPara>
+                        )}
                     </div>
                 </ContentWrap>
             </Container>
@@ -131,11 +130,17 @@ function SponsorProfile(props) {
 SponsorProfile.displayName = 'SSponsorProfile';
 SponsorProfile.propTypes = {
     user: PropTypes.object,
+    toggleModal: PropTypes.func,
+    profile: PropTypes.object,
 };
 
 const mapStateToProps = state => {
     return {
         user: state.user.user,
+        profile: state.user.profile,
     };
 };
-export default connect(mapStateToProps)(SponsorProfile);
+const mapDispatchToProps = dispatch =>
+    bindActionCreators({ toggleModal }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(SponsorProfile);

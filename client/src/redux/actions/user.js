@@ -1,5 +1,5 @@
 import * as types from '../constants/user';
-import { getApi, postApi } from '../../utils/api';
+import { getApi, postApi, putApi } from '../../utils/api';
 import errors from '../../utils/errors';
 import { User } from '../../config';
 import { history } from '../store';
@@ -93,8 +93,6 @@ export function loginUser(data) {
         dispatch(loginRequest());
         promise.then(
             function(payload) {
-                // eslint-disable-next-line no-console
-                console.log(payload);
                 dispatch(loginSuccess(payload.data?.data));
                 history.push('/dashboard/scholarship');
             },
@@ -137,10 +135,10 @@ export function getUserRequest() {
     };
 }
 
-// Calls the API to login a user.
+// Calls the API to get a user.
 export function getUser() {
     return dispatch => {
-        const promise = getApi('auth/profile');
+        const promise = getApi('auth/user');
         dispatch(getUserRequest());
         promise.then(
             function(payload) {
@@ -158,6 +156,153 @@ export function getUser() {
                     error = 'Network Error';
                 }
                 dispatch(getUserError(errors(error)));
+            }
+        );
+
+        return promise;
+    };
+}
+
+export function updateUserError(error) {
+    return {
+        type: types.UPDATE_USER_FAILURE,
+        payload: error,
+    };
+}
+
+export function updateUserSuccess(payload) {
+    return {
+        type: types.UPDATE_USER_SUCCESS,
+        payload,
+    };
+}
+
+export function updateUserRequest() {
+    return {
+        type: types.UPDATE_USER_REQUEST,
+    };
+}
+
+export function updateUser(data) {
+    return dispatch => {
+        const promise = putApi('auth/user', data);
+        dispatch(updateUserRequest());
+        promise.then(
+            function(payload) {
+                dispatch(updateUserSuccess(payload.data?.data));
+            },
+            function(error) {
+                if (error && error.response && error.response.data)
+                    error = error.response.data;
+                if (error && error.data) {
+                    error = error.data;
+                }
+                if (error && error.message) {
+                    error = error.message;
+                } else {
+                    error = 'Network Error';
+                }
+                dispatch(updateUserError(errors(error)));
+            }
+        );
+
+        return promise;
+    };
+}
+
+//getting profile
+export function getProfileError(error) {
+    return {
+        type: types.GET_USER_PROFILE_FAILURE,
+        payload: error,
+    };
+}
+
+export function getProfileSuccess(payload) {
+    return {
+        type: types.GET_USER_PROFILE_SUCCESS,
+        payload,
+    };
+}
+
+export function getProfileRequest() {
+    return {
+        type: types.GET_USER_PROFILE_REQUEST,
+    };
+}
+
+export function getUserProfile() {
+    return dispatch => {
+        const promise = getApi('user/profile');
+        dispatch(getProfileRequest());
+        promise.then(
+            function(payload) {
+                dispatch(getProfileSuccess(payload.data?.data));
+            },
+            function(error) {
+                if (error && error.response && error.response.data)
+                    error = error.response.data;
+                if (error && error.data) {
+                    error = error.data;
+                }
+                if (error && error.message) {
+                    error = error.message;
+                } else {
+                    error = 'Network Error';
+                }
+                dispatch(getProfileError(errors(error)));
+            }
+        );
+
+        return promise;
+    };
+}
+
+//updating profile
+export function updateProfileError(error) {
+    return {
+        type: types.UPDATE_USER_PROFILE_FAILURE,
+        payload: error,
+    };
+}
+
+export function updateProfileSuccess(payload) {
+    return {
+        type: types.UPDATE_USER_PROFILE_SUCCESS,
+        payload,
+    };
+}
+
+export function updateProfileRequest() {
+    return {
+        type: types.UPDATE_USER_PROFILE_REQUEST,
+    };
+}
+
+export function updateUserProfile(role, data) {
+    return dispatch => {
+        const link =
+            role === 'sponsor'
+                ? 'user/profile/sponsor'
+                : 'user/profile/student';
+        const promise = putApi(link, data);
+        dispatch(updateProfileRequest());
+        promise.then(
+            function(payload) {
+                dispatch(updateProfileSuccess(payload.data?.data));
+            },
+            function(error) {
+                if (error && error.response && error.response.data)
+                    error = error.response.data;
+                if (error && error.data) {
+                    error = error.data;
+                }
+                if (error && error.message) {
+                    error = error.message;
+                } else {
+                    error = 'Network Error';
+                }
+                dispatch(updateProfileError(errors(error)));
             }
         );
 

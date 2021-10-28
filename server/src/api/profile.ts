@@ -28,12 +28,11 @@ router.put(
   }),
 );
 
-router.put(
-  '/profile/sponsor',
+router.get(
+  '/profile',
   User.getUser,
-  validateStudentProfile,
   AsyncHandler(async (req: any, res: Response): Promise<any> => {
-    const data = await ProfileService.updateSponsorProfile(req.user, req.body);
+    const data = await ProfileService.getProfile(req.user);
     new SuccessResponse('success', data).send(res);
   }),
 );

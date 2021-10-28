@@ -15,7 +15,23 @@ const initialState = {
         error: null,
         success: false,
     },
+    updateUser: {
+        requesting: false,
+        error: null,
+        success: false,
+    },
+    getProfile: {
+        requesting: false,
+        error: null,
+        success: false,
+    },
+    updateProfile: {
+        requesting: false,
+        error: null,
+        success: false,
+    },
     user: {},
+    profile: {},
 };
 
 export default (state = initialState, action) => {
@@ -90,6 +106,81 @@ export default (state = initialState, action) => {
         case types.GET_USER_FAILURE:
             return Object.assign({}, state, {
                 getUser: {
+                    requesting: false,
+                    error: action.payload,
+                    success: false,
+                },
+            });
+        case types.UPDATE_USER_REQUEST:
+            return Object.assign({}, state, {
+                updateUser: {
+                    requesting: true,
+                    error: null,
+                    success: false,
+                },
+            });
+        case types.UPDATE_USER_SUCCESS:
+            return Object.assign({}, state, {
+                updateUser: {
+                    requesting: false,
+                    error: null,
+                    success: true,
+                },
+                user: action.payload,
+            });
+        case types.UPDATE_USER_FAILURE:
+            return Object.assign({}, state, {
+                updateUser: {
+                    requesting: false,
+                    error: action.payload,
+                    success: false,
+                },
+            });
+        case types.GET_USER_PROFILE_REQUEST:
+            return Object.assign({}, state, {
+                getProfile: {
+                    requesting: true,
+                    error: null,
+                    success: false,
+                },
+            });
+        case types.GET_USER_PROFILE_SUCCESS:
+            return Object.assign({}, state, {
+                getProfile: {
+                    requesting: false,
+                    error: null,
+                    success: true,
+                },
+                profile: action.payload,
+            });
+        case types.GET_USER_PROFILE_FAILURE:
+            return Object.assign({}, state, {
+                getProfile: {
+                    requesting: false,
+                    error: action.payload,
+                    success: false,
+                },
+            });
+        case types.UPDATE_USER_PROFILE_REQUEST:
+            return Object.assign({}, state, {
+                updateProfile: {
+                    requesting: true,
+                    error: null,
+                    success: false,
+                },
+            });
+        case types.UPDATE_USER_PROFILE_SUCCESS:
+            return Object.assign({}, state, {
+                updateProfile: {
+                    requesting: false,
+                    error: null,
+                    success: true,
+                },
+                profile: action.payload,
+            });
+        case types.UPDATE_USER_PROFILE_FAILURE:
+            return Object.assign({}, state, {
+                updateProfile: {
                     requesting: false,
                     error: action.payload,
                     success: false,

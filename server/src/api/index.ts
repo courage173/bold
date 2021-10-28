@@ -1,6 +1,6 @@
 import express from 'express';
 import AuthRoute from './user';
-import userRoute from './profiles';
+import userRoute from './profile';
 import scholarship from './scholarship';
 import application from './application';
 

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { User } from '../config';
 import { history } from '../redux/store';
-import { getUser } from '../redux/actions/user';
+import { getUser, getUserProfile } from '../redux/actions/user';
 
 export default function(ComposedComponent) {
     class Authentication extends Component {
@@ -16,7 +16,10 @@ export default function(ComposedComponent) {
         }
 
         componentDidMount() {
-            this.props.getUser();
+            this.props.getUser().then(() => {
+                // console.log('running');
+                this.props.getUserProfile();
+            });
 
             if (!this.isAuthenticated) {
                 history.push('/login', {
@@ -45,6 +48,7 @@ export default function(ComposedComponent) {
     Authentication.propTypes = {
         location: PropTypes.object,
         getUser: PropTypes.func.isRequired,
+        getUserProfile: PropTypes.func.isRequired,
     };
 
     Authentication.displayName = 'RequireAuth';
@@ -55,7 +59,7 @@ export default function(ComposedComponent) {
         };
     };
     const mapDispatchToProps = dispatch =>
-        bindActionCreators({ getUser }, dispatch);
+        bindActionCreators({ getUser, getUserProfile }, dispatch);
 
     return connect(mapStateToProps, mapDispatchToProps)(Authentication);
 }
