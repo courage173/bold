@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ import DashboardLayout from '../../HOC/DashboardLayout';
 import ScholarshipCard from './ScholarshipCard';
 import { getScholarships } from '../../redux/actions/scholarship';
 import Spinner from '../../utils/Spinner';
+import { v4 as uuidv4 } from 'uuid';
 
 const Container = styled.div`
     padding: 40px;
@@ -16,12 +17,14 @@ function Scholarship(props) {
     useEffect(() => {
         props.getScholarships();
     }, []);
+    const [modalId] = useState(uuidv4());
     const {
         getScholarships: { requesting },
         scholarships,
     } = props.scholarships;
+    const role = props.user.role;
     return (
-        <DashboardLayout title={'Scholarships'}>
+        <DashboardLayout title={'Scholarships'} supportId={modalId}>
             <Container>
                 {requesting ? (
                     <Spinner />
@@ -30,6 +33,8 @@ function Scholarship(props) {
                         <ScholarshipCard
                             key={scholarship._id}
                             data={scholarship}
+                            role={role}
+                            supportId={modalId}
                         />
                     ))
                 )}
@@ -40,12 +45,13 @@ function Scholarship(props) {
 
 Scholarship.propTypes = {
     getScholarships: PropTypes.func,
-    // eslint-disable-next-line react/no-unused-prop-types
     scholarships: PropTypes.object,
+    user: PropTypes.object,
 };
 const mapStateToProps = state => {
     return {
         scholarships: state.scholarship,
+        user: state.user.user,
     };
 };
 

@@ -1,6 +1,12 @@
-import React from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useEffect } from 'react';
+import { bindActionCreators } from 'redux';
 import styled from '@emotion/styled';
 import MyButton from '../../utils/Button';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { toggleModal } from '../../redux/actions/ui';
+import { getSingleScholarship } from '../../redux/actions/scholarship';
 
 const Container = styled.div`
     width: 100%;
@@ -65,7 +71,16 @@ const CredWrap = styled.div`
 const CredSpan = styled.span`
     font-size: 14px;
 `;
-function ScholarshipCard() {
+function ScholarshipCard(props) {
+    // eslint-disable-next-line no-console
+    console.log(props.role);
+    // useEffect(() => {
+
+    // }, []);
+    const handleSupport = () => {
+        props.getSingleScholarship(props.data._id);
+        props.toggleModal(props.supportId);
+    };
     return (
         <Container>
             <CardTop>
@@ -106,7 +121,16 @@ function ScholarshipCard() {
                     </EduWrap>
                 </div>
                 <div>
-                    <MyButton title="Apply" width={'5rem'} height="2rem" />
+                    {props.role === 'sponsor' ? (
+                        <MyButton
+                            title="support"
+                            width={'5rem'}
+                            height="2rem"
+                            runAction={() => handleSupport()}
+                        />
+                    ) : (
+                        <MyButton title="Apply" width={'5rem'} height="2rem" />
+                    )}
                 </div>
             </CardBottom>
         </Container>
@@ -114,6 +138,25 @@ function ScholarshipCard() {
 }
 
 ScholarshipCard.displayName = 'ScholarshipCard';
-export default ScholarshipCard;
+
+ScholarshipCard.propTypes = {
+    // user: PropTypes.object,
+    toggleModal: PropTypes.func,
+    data: PropTypes.object,
+    supportId: PropTypes.string,
+    role: PropTypes.string,
+    getSingleScholarship: PropTypes.func,
+};
+
+const mapStateToProps = state => {
+    return {
+        user: state.user.user,
+        profile: state.user.profile,
+    };
+};
+const mapDispatchToProps = dispatch =>
+    bindActionCreators({ toggleModal, getSingleScholarship }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ScholarshipCard);
 //#e8f0fe
 //#f4faff
