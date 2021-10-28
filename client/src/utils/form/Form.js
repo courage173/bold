@@ -43,13 +43,22 @@ const DefaultInput = styled.input`
     padding: 0;
     padding-left: 5px;
     border: 1.8px solid #b0b0b0;
-    outline: none;
     margin-top: -3px;
+    outline: none;
     font-size: 16px;
     margin-top: 5px;
     @media (max-width: 768px) {
         box-shadow: #f5f5f5 0px 0px 0px 9999px inset;
     }
+`;
+const TextArea = styled.textarea`
+    width: 100%;
+    border: 1.8px solid #b0b0b0;
+    box-shadow: #fff 0px 0px 0px 9999px inset;
+    font-size: 16px;
+    border-radius: 4px;
+    padding-left: 5px;
+    outline: none;
 `;
 const Error = styled.div`
     color: red;
@@ -99,6 +108,24 @@ function FormField({ formdata, change, id, FieldSetWidth }) {
                             onBlur={event => change({ event, id, blur: true })}
                             onChange={event => change({ event, id })}
                             id={id}
+                        />
+                        {showError()}
+                    </div>
+                );
+                break;
+            case 'textarea':
+                template = (
+                    <div>
+                        {formdata.showlabel && (
+                            <Legend>{formdata.config.label}</Legend>
+                        )}
+                        <TextArea
+                            {...formdata.config}
+                            value={formdata.value}
+                            onBlur={event => change({ event, id, blur: true })}
+                            onChange={event => change({ event, id })}
+                            id={id}
+                            rows="8"
                         />
                         {showError()}
                     </div>

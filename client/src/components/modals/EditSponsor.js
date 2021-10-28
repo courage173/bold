@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import MyButton from '../../utils/Button';
 import { connect } from 'react-redux';
@@ -6,11 +6,15 @@ import { bindActionCreators } from 'redux';
 import { toggleModal } from '../../redux/actions/ui';
 import PropTypes from 'prop-types';
 import FormField from '../../utils/form/Form';
-import { update, generateData, isFormValid } from '../../utils/form/formAction';
-import DatePicker from 'react-datepicker';
+import {
+    update,
+    generateData,
+    isFormValid,
+    populateFields,
+} from '../../utils/form/formAction';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
-import { createScholarship } from '../../redux/actions/scholarship';
+import { updateUser } from '../../redux/actions/user';
 
 const Container = styled.div`
     margin: 0 auto;
@@ -27,7 +31,7 @@ const Container = styled.div`
 `;
 const ModalContainer = styled.div`
     width: 40rem;
-    height: 34rem;
+    height: 21rem;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0px 6px 12px rgba(8, 35, 48, 0.14);
@@ -49,18 +53,21 @@ const HeaderTitle = styled.h5`
     font-weight: 600;
     margin: 0;
 `;
-const Legend = styled.legend`
-    font-style: normal;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0.4px;
-    margin-bottom: 10px;
-`;
-function CreateScholarship(props) {
-    const modalOpen = props.modalOpen === props.modalId;
-    const [startDate, setStartDate] = useState(new Date());
 
+function EditSponsorProfile(props) {
+    const modalOpen = props.modalOpen === props.modalId;
+
+    useEffect(() => {
+        const user = props.user;
+        const formdata = userForm.formdata;
+        // eslint-disable-next-line no-console
+        console.log(user);
+        const newFormdata = populateFields(formdata, user);
+        setUserForm({
+            formError: false,
+            formdata: newFormdata,
+        });
+    }, [props.user]);
     const updateForm = element => {
         const formdata = userForm.formdata;
         const newFormdata = update(element, formdata);
@@ -73,14 +80,14 @@ function CreateScholarship(props) {
 
     const [userForm, setUserForm] = useState({
         formdata: {
-            name: {
+            firstName: {
                 element: 'input',
                 value: '',
                 config: {
                     name: 'email_input',
                     type: 'text',
-                    label: 'Name',
-                    placeholder: 'Scholarship Name',
+                    label: 'First Name',
+                    placeholder: 'First Name',
                 },
                 validation: {
                     required: true,
@@ -91,14 +98,14 @@ function CreateScholarship(props) {
                 validationMessage: '',
                 showlabel: true,
             },
-            description: {
+            lastName: {
                 element: 'input',
                 value: '',
                 config: {
                     name: 'description_input',
                     type: 'text',
-                    placeholder: 'Enter description',
-                    label: 'Description',
+                    placeholder: 'Enter Last Name',
+                    label: 'Last Name',
                 },
                 validation: {
                     required: true,
@@ -108,51 +115,18 @@ function CreateScholarship(props) {
                 validationMessage: '',
                 showlabel: true,
             },
-            amount: {
+            email: {
                 element: 'input',
                 value: '',
                 config: {
                     name: 'amount_input',
-                    type: 'number',
-                    placeholder: 'Enter Scholarship Amount',
-                    label: 'Grant',
+                    type: 'email',
+                    placeholder: 'Enter Email',
+                    label: 'Email',
                 },
                 validation: {
                     required: true,
-                },
-                valid: false,
-                touched: false,
-                validationMessage: '',
-                showlabel: true,
-            },
-            recipientNumber: {
-                element: 'input',
-                value: '',
-                config: {
-                    name: 'recipent_input',
-                    type: 'number',
-                    placeholder: 'Enter Max Recipient',
-                    label: 'No. of Recipent',
-                },
-                validation: {
-                    required: true,
-                },
-                valid: false,
-                touched: false,
-                validationMessage: '',
-                showlabel: true,
-            },
-            category: {
-                element: 'input',
-                value: '',
-                config: {
-                    name: 'recipent_input',
-                    type: 'text',
-                    placeholder: 'Enter Max Recipient',
-                    label: 'Category',
-                },
-                validation: {
-                    required: true,
+                    email: true,
                 },
                 valid: false,
                 touched: false,
@@ -165,12 +139,15 @@ function CreateScholarship(props) {
     const handleSubmit = () => {
         const form = userForm.formdata;
         const isValid = isFormValid(form);
-        if (isValid && startDate) {
+        if (isValid) {
             const data = generateData(form);
-            data.expiryDate = startDate;
-            props.createScholarship(data).then(() => {
-                props.toggleModal([]);
-            });
+            props
+                .updateUser(data)
+                .then(() => {
+                    props.toggleModal([]);
+                    toast.success('update succesfully');
+                })
+                .catch(() => toast.success('Error Occured while updating'));
         } else {
             toast.error('form is invalid');
         }
@@ -180,13 +157,13 @@ function CreateScholarship(props) {
         <Container open={modalOpen} onClick={() => props.toggleModal(null)}>
             <ModalContainer open={modalOpen} onClick={e => e.stopPropagation()}>
                 <HeaderContainer>
-                    <HeaderTitle>Create Scholarship</HeaderTitle>
+                    <HeaderTitle>Edit Profile</HeaderTitle>
                 </HeaderContainer>
                 <div style={{ padding: '30px' }}>
                     <div style={{ marginBottom: '10px' }}>
                         <FormField
-                            id={'name'}
-                            formdata={userForm.formdata.name}
+                            id={'firstName'}
+                            formdata={userForm.formdata.firstName}
                             change={element => updateForm(element)}
                             styles={{
                                 marginTop: '0 20px',
@@ -196,8 +173,8 @@ function CreateScholarship(props) {
                     </div>
                     <div style={{ marginBottom: '10px' }}>
                         <FormField
-                            id={'description'}
-                            formdata={userForm.formdata.description}
+                            id={'lastName'}
+                            formdata={userForm.formdata.lastName}
                             change={element => updateForm(element)}
                             styles={{
                                 marginTop: '0 20px',
@@ -207,38 +184,8 @@ function CreateScholarship(props) {
                     </div>
                     <div style={{ marginBottom: '10px' }}>
                         <FormField
-                            id={'amount'}
-                            formdata={userForm.formdata.amount}
-                            change={element => updateForm(element)}
-                            styles={{
-                                marginTop: '0 20px',
-                            }}
-                            FieldSetWidth="27rem"
-                        />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                        <FormField
-                            id={'category'}
-                            formdata={userForm.formdata.category}
-                            change={element => updateForm(element)}
-                            styles={{
-                                marginTop: '0 20px',
-                            }}
-                            FieldSetWidth="27rem"
-                        />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                        <Legend>Scholarship Deadline</Legend>
-                        <DatePicker
-                            selected={startDate}
-                            onChange={date => setStartDate(date)}
-                            style={{ marginTop: '10px' }}
-                        />
-                    </div>
-                    <div style={{ marginBottom: '10px' }}>
-                        <FormField
-                            id={'recipientNumber'}
-                            formdata={userForm.formdata.recipientNumber}
+                            id={'email'}
+                            formdata={userForm.formdata.email}
                             change={element => updateForm(element)}
                             styles={{
                                 marginTop: '0 20px',
@@ -265,6 +212,7 @@ function CreateScholarship(props) {
                             width="5rem"
                             height="2rem"
                             runAction={() => handleSubmit()}
+                            requesting={props.requesting}
                         />
                     </div>
                 </div>
@@ -273,19 +221,23 @@ function CreateScholarship(props) {
     );
 }
 
-CreateScholarship.displayName = 'CreateScholarship';
-CreateScholarship.propTypes = {
-    modalOpen: PropTypes.bool,
+EditSponsorProfile.displayName = 'EditSponsorProfile';
+EditSponsorProfile.propTypes = {
+    modalOpen: PropTypes.string,
     toggleModal: PropTypes.func,
-    createScholarship: PropTypes.func,
+    updateUser: PropTypes.func,
     modalId: PropTypes.string,
+    user: PropTypes.object,
+    requesting: PropTypes.bool,
 };
 const mapStateToProps = state => {
     return {
         modalOpen: state.ui.modalOpen,
+        user: state.user.user,
+        requesting: state.user.updateUser.requesting,
     };
 };
 const mapDispatchToProps = dispatch =>
-    bindActionCreators({ toggleModal, createScholarship }, dispatch);
+    bindActionCreators({ toggleModal, updateUser }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateScholarship);
+export default connect(mapStateToProps, mapDispatchToProps)(EditSponsorProfile);

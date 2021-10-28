@@ -1,11 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
+import { v4 as uuidv4 } from 'uuid';
 import { bindActionCreators } from 'redux';
 import Sidebar from '../components/Sidebar';
 import Backdrop from '../utils/Backdrop';
 import { connect } from 'react-redux';
 import CreateScholarship from '../components/modals/CreateScholarship';
+import EditSponsorProfile from '../components/modals/EditSponsor';
+import UpdateSponsorDescription from '../components/modals/UpdateSponsorDescription';
 import PropTypes from 'prop-types';
 import Fade from 'react-reveal/Fade';
 import MyButton from '../utils/Button';
@@ -101,9 +104,14 @@ const MenuBar = styled.div`
 
 const DashboardLayout = props => {
     const [toggleSideBar, setToggle] = useState(false);
+    const [modalId] = useState(uuidv4());
     return (
         <Container>
-            <CreateScholarship />
+            <CreateScholarship modalId={modalId} />
+            <EditSponsorProfile modalId={props.editSponsorModalId} />
+            <UpdateSponsorDescription
+                modalId={props.sponsorDescriptionModalId}
+            />
             {toggleSideBar ? (
                 <Backdrop runAction={() => setToggle(false)} />
             ) : null}
@@ -135,7 +143,7 @@ const DashboardLayout = props => {
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <MyButton
                                 title={'Create Scholarship'}
-                                runAction={() => props.toggleModal([])}
+                                runAction={() => props.toggleModal(modalId)}
                             />
                         </div>
                     </div>
@@ -153,6 +161,8 @@ DashboardLayout.propTypes = {
     children: PropTypes.node,
     toggleModal: PropTypes.func,
     title: PropTypes.string,
+    editSponsorModalId: PropTypes.string,
+    sponsorDescriptionModalId: PropTypes.string,
 };
 const mapStateToProps = state => {
     return {

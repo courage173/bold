@@ -28,11 +28,18 @@ router.post(
 );
 
 router.get(
-  '/profile',
+  '/user',
   User.getUser,
   AsyncHandler(async (req: any, res: Response) => {
-    //call the login service
     const data = await UserService.getUser(req.user);
+    new SuccessResponse('success', data).send(res);
+  }),
+);
+router.put(
+  '/user',
+  User.getUser,
+  AsyncHandler(async (req: any, res: Response) => {
+    const data = await UserService.updateUser(req.user, req.body);
     new SuccessResponse('success', data).send(res);
   }),
 );

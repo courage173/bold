@@ -10,13 +10,7 @@ const ui = (state = initialState, action) => {
         case types.TOGGLE_MODAL:
             return {
                 ...state,
-                modalOpen: !state.modalOpen,
-                users: !state.modalOpen ? action.payload : [],
-            };
-        case types.TOGGLE_FORM:
-            return {
-                ...state,
-                toggleForm: action.payload,
+                modalOpen: action.payload,
             };
         default:
             return { ...state };

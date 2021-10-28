@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { jwtSecretKey, saltRounds } from '../config/constants';
 import { BadRequestError, InternalError, NotFoundError } from '../utils/ErrorHandler';
 import { JwtPayload } from '../interface/jwt-payload';
+import { IUserUpdate } from '../interface/user';
 
 class UserService {
   public static async create(data: IUser): Promise<IUser> {
@@ -24,9 +25,12 @@ class UserService {
       throw new Error(error);
     }
   }
-  public static async findOneBy(query: any): Promise<IUser | null> {
+  public static async findOneBy(query: any): Promise<IUser> {
     try {
       const user = await UserModel.findOne(query);
+      if (!user) {
+        throw new BadRequestError('User not found');
+      }
       return user;
     } catch (error: any) {
       throw new Error(error);
@@ -127,6 +131,24 @@ class UserService {
       }
       return user;
     } catch (error: any) {
+      throw error;
+    }
+  }
+  public static async updateUser(payload: JwtPayload, data: IUserUpdate): Promise<IUser> {
+    try {
+      //get
+      const userId = payload.id;
+      if (data.role) {
+        delete data.role;
+      }
+      const user = await UserModel.findOneAndUpdate({ _id: userId }, data, { new: true }).select(
+        '-password',
+      );
+      if (!user) {
+        throw new InternalError('user not found');
+      }
+      return user;
+    } catch (error) {
       throw error;
     }
   }
