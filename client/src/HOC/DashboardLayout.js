@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import CreateScholarship from '../components/modals/CreateScholarship';
 import EditSponsorProfile from '../components/modals/EditSponsor';
 import UpdateSponsorDescription from '../components/modals/UpdateSponsorDescription';
+import SupportModal from '../components/modals/SupportModal';
 import PropTypes from 'prop-types';
 import Fade from 'react-reveal/Fade';
 import MyButton from '../utils/Button';
@@ -109,6 +110,7 @@ const DashboardLayout = props => {
         <Container>
             <CreateScholarship modalId={modalId} />
             <EditSponsorProfile modalId={props.editSponsorModalId} />
+            <SupportModal modalId={props.supportId} />
             <UpdateSponsorDescription
                 modalId={props.sponsorDescriptionModalId}
             />
@@ -163,6 +165,7 @@ DashboardLayout.propTypes = {
     title: PropTypes.string,
     editSponsorModalId: PropTypes.string,
     sponsorDescriptionModalId: PropTypes.string,
+    supportId: PropTypes.string,
 };
 const mapStateToProps = state => {
     return {

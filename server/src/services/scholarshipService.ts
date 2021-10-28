@@ -30,7 +30,10 @@ class Scholarshipervice {
   }
   public static async findOneBy(query: any): Promise<IScholarship> {
     try {
-      const scholarship = await ScholarshipModel.findOne(query);
+      const scholarship = await ScholarshipModel.findOne(query).populate({
+        path: 'sponsorId',
+        select: 'firstName lastName',
+      });
       if (!scholarship) {
         throw new NotFoundError('scholarship not found');
       }

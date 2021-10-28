@@ -24,7 +24,7 @@ const ScholarshipSchema = new Schema(
     recipientNumber: Number,
     category: String,
     sponsorId: { type: String, ref: 'User' },
-    sponsors: [{ sponsorId: { type: String, ref: 'User' } }],
+    sponsors: [{ sponsorId: { type: String, ref: 'User' }, amount: Number }],
     expiryDate: { type: Date },
     updatedAt: {
       type: Date,
