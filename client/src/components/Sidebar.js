@@ -42,11 +42,6 @@ const Image = styled.img`
     border-radius: 50%;
     object-fit: cover;
 `;
-const Para = styled.p`
-    text-align: center;
-    width: 100%;
-    color: #ffffff;
-`;
 const LinkWrap = styled.div`
     display: flex;
     flex-direction: column;
@@ -85,8 +80,7 @@ const Sidebar = props => {
         const link = currentLink?.substring(1).split('/')[1];
         setActive(link);
     }, [currentLink]);
-    // eslint-disable-next-line no-console
-    console.log(active);
+    const { user } = props;
     const Links = [
         {
             name: 'Scholarships',
@@ -100,7 +94,7 @@ const Sidebar = props => {
             ),
         },
         {
-            name: 'Applications',
+            name: user.role === 'sponsor' ? 'My Applications' : 'Applications',
             to: 'application',
             icon: (
                 <GoFileSubmodule
@@ -113,6 +107,7 @@ const Sidebar = props => {
         {
             name: 'Awarded',
             to: 'award',
+            student: true,
             icon: (
                 <BsFillAwardFill
                     size={'25px'}
@@ -135,32 +130,19 @@ const Sidebar = props => {
         { name: 'Logout', to: 'logout' },
     ];
 
-    const { user } = props;
-    const handleLogout = () => {
-        if (user.role === 'user') {
-            const data = JSON.parse(localStorage.getItem('user'));
-            data.auth = false;
-            localStorage.setItem('user', JSON.stringify(data));
-            history.push('/login');
-        } else {
-            const data = JSON.parse(localStorage.getItem('brand'));
-            data.auth = false;
-            localStorage.setItem('brand', JSON.stringify(data));
-            history.push('/login');
-        }
-    };
+    const handleLogout = () => {};
+    const role = user.role;
     return (
         <Container toggle={props.toggle}>
             <ProfileSection>
                 <Image src={user1} />
-                <Para>
-                    {user.role === 'user'
-                        ? user.firstName + ' ' + user.lastName
-                        : user.name}
-                </Para>
             </ProfileSection>
             <LinkWrap>
                 {Links.map((link, i) => {
+                    if (role === 'sponsor' && link.student) {
+                        return null;
+                    }
+
                     if (link.name === 'Logout') {
                         return (
                             <LogoutButton key={i} onClick={handleLogout}>

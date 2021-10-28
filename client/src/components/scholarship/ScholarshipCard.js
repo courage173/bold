@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toggleModal } from '../../redux/actions/ui';
 import { getSingleScholarship } from '../../redux/actions/scholarship';
+import { createScholarship } from '../../redux/actions/application';
 import { randomNumberGenerator, getCredibilityColor } from '../../utils/helper';
 import moment from 'moment';
 
@@ -143,13 +144,22 @@ function ScholarshipCard(props) {
                 <div>
                     {props.role === 'sponsor' ? (
                         <MyButton
-                            title="support"
+                            title={props.showView ? 'View' : 'support'}
                             width={'5rem'}
                             height="2rem"
                             runAction={() => handleSupport()}
                         />
                     ) : (
-                        <MyButton title="Apply" width={'5rem'} height="2rem" />
+                        <MyButton
+                            title="Apply"
+                            width={'5rem'}
+                            height="2rem"
+                            runAction={() =>
+                                props.createScholarship({
+                                    scholarshipId: props.data._id,
+                                })
+                            }
+                        />
                     )}
                 </div>
             </CardBottom>
@@ -166,6 +176,8 @@ ScholarshipCard.propTypes = {
     supportId: PropTypes.string,
     role: PropTypes.string,
     getSingleScholarship: PropTypes.func,
+    showView: PropTypes.bool,
+    createScholarship: PropTypes.func,
 };
 
 const mapStateToProps = state => {
@@ -175,8 +187,9 @@ const mapStateToProps = state => {
     };
 };
 const mapDispatchToProps = dispatch =>
-    bindActionCreators({ toggleModal, getSingleScholarship }, dispatch);
+    bindActionCreators(
+        { toggleModal, getSingleScholarship, createScholarship },
+        dispatch
+    );
 
 export default connect(mapStateToProps, mapDispatchToProps)(ScholarshipCard);
-//#e8f0fe
-//#f4faff

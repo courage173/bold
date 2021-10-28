@@ -50,6 +50,21 @@ class ApplicationService {
     }
   }
 
+  public static async findUserApplications(query: any): Promise<IApplication[]> {
+    try {
+      const applications = await ApplicationModel.find(query).populate({
+        path: 'scholarshipId',
+        populate: {
+          path: 'sponsorId',
+          model: 'User',
+        },
+      });
+      return applications;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public static async findBy(query: any): Promise<IApplication[]> {
     try {
       const applications = await ApplicationModel.find(query);
