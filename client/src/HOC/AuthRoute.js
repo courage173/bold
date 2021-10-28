@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { User } from '../config';
 import { history } from '../redux/store';
 import { getUser, getUserProfile } from '../redux/actions/user';
+import { getScholarships } from '../redux/actions/scholarship';
 
 export default function(ComposedComponent) {
     class Authentication extends Component {
@@ -19,6 +20,7 @@ export default function(ComposedComponent) {
             this.props.getUser().then(() => {
                 // console.log('running');
                 this.props.getUserProfile();
+                this.props.getScholarships();
             });
 
             if (!this.isAuthenticated) {
@@ -49,6 +51,7 @@ export default function(ComposedComponent) {
         location: PropTypes.object,
         getUser: PropTypes.func.isRequired,
         getUserProfile: PropTypes.func.isRequired,
+        getScholarships: PropTypes.func.isRequired,
     };
 
     Authentication.displayName = 'RequireAuth';
@@ -59,7 +62,10 @@ export default function(ComposedComponent) {
         };
     };
     const mapDispatchToProps = dispatch =>
-        bindActionCreators({ getUser, getUserProfile }, dispatch);
+        bindActionCreators(
+            { getUser, getUserProfile, getScholarships },
+            dispatch
+        );
 
     return connect(mapStateToProps, mapDispatchToProps)(Authentication);
 }

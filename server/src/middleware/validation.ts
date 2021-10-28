@@ -68,6 +68,13 @@ export function validateScholarshipAward(req: Request, res: Response, next: Next
   validateRequest(req, res, next, schema);
 }
 
+export function validateScholarshipSupport(req: Request, res: Response, next: NextFunction) {
+  const schema = Joi.object({
+    amount: Joi.number().required(),
+  });
+  validateRequest(req, res, next, schema);
+}
+
 function validateRequest(req: Request, res: Response, next: NextFunction, schema: Schema) {
   const options = {
     abortEarly: false, // include all errors

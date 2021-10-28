@@ -1,10 +1,11 @@
-import mongoose, { Schema, Document, Date } from 'mongoose';
+import mongoose, { Schema, Document, Date, Types } from 'mongoose';
 
 type Sponsors = {
   sponsors: string;
 };
 export interface IScholarship extends Document {
   name: string;
+  count?: number;
   description: string;
   amount: number;
   recipientNumber: number;
