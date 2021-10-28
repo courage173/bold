@@ -1,5 +1,5 @@
 import * as types from '../constants/scholarship';
-import { getApi, postApi } from '../../utils/api';
+import { getApi, postApi, putApi } from '../../utils/api';
 import errors from '../../utils/errors';
 
 //creating scholarship
@@ -139,6 +139,53 @@ export function getSingleScholarship(id) {
                     error = 'Network Error';
                 }
                 dispatch(getSingleScholarshipError(errors(error)));
+            }
+        );
+
+        return promise;
+    };
+}
+
+export function supportScholarshipError(error) {
+    return {
+        type: types.SUPPORT_SCHOLARSHIP_FAILURE,
+        payload: error,
+    };
+}
+
+export function supportScholarshipSuccess(payload) {
+    return {
+        type: types.SUPPORT_SCHOLARSHIP_SUCCESS,
+        payload,
+    };
+}
+
+export function supportScholarshipRequest() {
+    return {
+        type: types.SUPPORT_SCHOLARSHIP_REQUEST,
+    };
+}
+
+export function supportScholarship(id, data) {
+    return dispatch => {
+        const promise = putApi(`scholarship/support/${id}`, data);
+        dispatch(supportScholarshipRequest());
+        promise.then(
+            function(payload) {
+                dispatch(supportScholarshipSuccess(payload.data?.data));
+            },
+            function(error) {
+                if (error && error.response && error.response.data)
+                    error = error.response.data;
+                if (error && error.data) {
+                    error = error.data;
+                }
+                if (error && error.message) {
+                    error = error.message;
+                } else {
+                    error = 'Network Error';
+                }
+                dispatch(supportScholarshipError(errors(error)));
             }
         );
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { v4 as uuidv4 } from 'uuid';
 import { bindActionCreators } from 'redux';
@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import Fade from 'react-reveal/Fade';
 import MyButton from '../utils/Button';
 import { toggleModal } from '../redux/actions/ui';
+import { getScholarships } from '../redux/actions/scholarship';
 
 const Container = styled.div`
     width: 100%;
@@ -174,6 +175,6 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch =>
-    bindActionCreators({ toggleModal }, dispatch);
+    bindActionCreators({ toggleModal, getScholarships }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardLayout);

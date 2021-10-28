@@ -3,7 +3,11 @@ import { Types } from 'mongoose';
 import AsyncHandler from '../utils/AsyncHandler';
 import { SuccessResponse } from '../utils/Response';
 import ScholarshipService from '../services/scholarshipService';
-import { validateScholarship, validateScholarshipAward } from '../middleware/validation';
+import {
+  validateScholarship,
+  validateScholarshipAward,
+  validateScholarshipSupport,
+} from '../middleware/validation';
 import User from '../middleware/user';
 
 const router = express.Router();
@@ -52,6 +56,21 @@ router.put(
       scholarshipId: req.params.scholarshipId,
       studentId: req.body.studentId,
     });
+    new SuccessResponse('success', data).send(res);
+  }),
+);
+
+router.put(
+  '/support/:scholarshipId',
+  User.getUser,
+  User.UserIsSponsor,
+  validateScholarshipSupport,
+  AsyncHandler(async (req: any, res: Response): Promise<any> => {
+    const data = await ScholarshipService.support(
+      req.user,
+      req.params.scholarshipId,
+      req.body.amount,
+    );
     new SuccessResponse('success', data).send(res);
   }),
 );

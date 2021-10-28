@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { bindActionCreators } from 'redux';
 import styled from '@emotion/styled';
 import MyButton from '../../utils/Button';
@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toggleModal } from '../../redux/actions/ui';
 import { getSingleScholarship } from '../../redux/actions/scholarship';
+import { randomNumberGenerator, getCredibilityColor } from '../../utils/helper';
+import moment from 'moment';
 
 const Container = styled.div`
     width: 100%;
@@ -72,37 +74,36 @@ const CredSpan = styled.span`
     font-size: 14px;
 `;
 function ScholarshipCard(props) {
-    // eslint-disable-next-line no-console
-    console.log(props.role);
-    // useEffect(() => {
-
-    // }, []);
     const handleSupport = () => {
         props.getSingleScholarship(props.data._id);
         props.toggleModal(props.supportId);
     };
+    const percentageCred = randomNumberGenerator();
+    const credColor = getCredibilityColor(percentageCred);
     return (
         <Container>
             <CardTop>
                 <TitleSection>
-                    <Title>You Deserve it scholarships</Title>
+                    <Title>{props.data.name}</Title>
                     <ReqSpan>2 Requirements: Essay, 2 Documents</ReqSpan>
                 </TitleSection>
                 <RightSide>
                     <div style={{ textAlign: 'center' }}>
-                        <RightTitle>$2000</RightTitle>
+                        <RightTitle>${props.data.amount}</RightTitle>
                         <ReqSpan>Multiple Awards</ReqSpan>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                        <RightTitle>in 3 Months</RightTitle>
+                        <RightTitle>
+                            {moment(props.data.expiryDate).fromNow()}
+                        </RightTitle>
                         <ReqSpan>Deadline</ReqSpan>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                        <RightTitle>3</RightTitle>
-                        <ReqSpan>Requirements</ReqSpan>
+                        <RightTitle>{props.data.recipientNumber}</RightTitle>
+                        <ReqSpan>Recipients</ReqSpan>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                        <RightTitle>123</RightTitle>
+                        <RightTitle>{props.data.count}</RightTitle>
                         <ReqSpan>Applicants</ReqSpan>
                     </div>
                 </RightSide>
@@ -113,11 +114,30 @@ function ScholarshipCard(props) {
                         display: 'flex',
                     }}
                 >
-                    <CredWrap>
-                        <CredSpan>Credibility 55%</CredSpan>
+                    <CredWrap
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <div
+                            style={{
+                                height: '10px',
+                                width: '10px',
+                                backgroundColor: credColor,
+                                borderRadius: '50%',
+                                marginRight: 2,
+                            }}
+                        ></div>
+                        <CredSpan>Credibility {percentageCred}%</CredSpan>
                     </CredWrap>
                     <EduWrap>
-                        <span style={{ opacity: 0.5 }}>Education</span>
+                        <span style={{ opacity: 0.5 }}>
+                            {props.data.category
+                                ? props.data.category
+                                : 'general'}
+                        </span>
                     </EduWrap>
                 </div>
                 <div>

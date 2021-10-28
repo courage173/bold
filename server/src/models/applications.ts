@@ -3,7 +3,7 @@ import mongoose, { Schema, Document, Date } from 'mongoose';
 export interface IApplication extends Document {
   scholarshipId: string;
   studentId: string;
-  message: string;
+  essay: string;
   awarded: boolean;
   updatedAt: Date;
   createdAt: Date;
@@ -12,7 +12,7 @@ export interface IApplication extends Document {
 const ApplicationSchema = new Schema(
   {
     scholarshipId: { type: String, ref: 'Scholarships' },
-    message: { type: String },
+    essay: { type: String },
     studentId: { type: String, ref: 'User' },
     awarded: { type: Boolean, default: false },
     updatedAt: {

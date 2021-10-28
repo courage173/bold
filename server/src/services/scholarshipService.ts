@@ -16,6 +16,7 @@ class Scholarshipervice {
       scholarshipModel.category = data.category;
       scholarshipModel.amount = data.amount;
       scholarshipModel.sponsorId = payload.id;
+      scholarshipModel.expiryDate = data.expiryDate;
 
       let scholarship;
       try {
@@ -42,13 +43,59 @@ class Scholarshipervice {
       throw error;
     }
   }
-  public static async findBy(
-    query: any,
-    skip: number = 0,
-    limit: number = 20,
-  ): Promise<IScholarship[]> {
+  public static async findBy(query: any, skip: number = 0, limit: number = 20): Promise<any[]> {
     try {
-      const scholarship = await ScholarshipModel.find(query).skip(skip).limit(limit);
+      const scholarship = await ScholarshipModel.find(query)
+        .skip(skip)
+        .limit(limit)
+        .select('-__v')
+        .lean();
+
+      const result = await Promise.all(
+        scholarship.map(async (scholarship) => {
+          const data: any = { ...scholarship };
+          const count = await ApplicationModel.count({
+            scholarshipId: scholarship._id,
+          });
+
+          data.count = count;
+          return data;
+        }),
+      );
+
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+  public static async support(
+    payload: JwtPayload,
+    scholarshipId: string,
+    amount: number,
+  ): Promise<any> {
+    try {
+      let scholarship = await ScholarshipModel.findOne({ _id: scholarshipId });
+      if (!scholarship) {
+        throw new NotFoundError('scholarship not found');
+      }
+      const newAmount = scholarship.amount + Number(amount);
+      let sponsors: any = scholarship.sponsors || [];
+      let found = false;
+      sponsors = sponsors.map((sponsor: any) => {
+        if (sponsor.sponsorId === payload.id) {
+          sponsor.amount = Number(sponsor.amount) + Number(amount);
+          found = true;
+        }
+        return sponsor;
+      });
+      if (!found) {
+        sponsors.push({ sponsorId: payload.id, amount });
+      }
+      scholarship = await ScholarshipModel.findOneAndUpdate(
+        { _id: scholarshipId },
+        { amount: newAmount, sponsors },
+        { new: true },
+      );
       return scholarship;
     } catch (error) {
       throw error;

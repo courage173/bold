@@ -6,10 +6,16 @@ import { bindActionCreators } from 'redux';
 import { toggleModal } from '../../redux/actions/ui';
 import PropTypes from 'prop-types';
 import FormField from '../../utils/form/Form';
-import { update, generateData, isFormValid } from '../../utils/form/formAction';
+import {
+    update,
+    generateData,
+    isFormValid,
+    resetFields,
+} from '../../utils/form/formAction';
 import 'react-datepicker/dist/react-datepicker.css';
 import { toast } from 'react-toastify';
 import Spinner from '../../utils/Spinner';
+import { supportScholarship } from '../../redux/actions/scholarship';
 
 import { FaUserAlt } from 'react-icons/fa';
 
@@ -96,12 +102,19 @@ function SupportModal(props) {
         const isValid = isFormValid(form);
         if (isValid) {
             const data = generateData(form);
-            props.getSingleScholarship(data).then(() => {
+            props.supportScholarship(props.data._id, data).then(() => {
+                toast.error('Amount sent succesfully');
                 props.toggleModal([]);
             });
         } else {
             toast.error('form is invalid');
         }
+
+        const newForm = resetFields(form);
+
+        setUserForm({
+            formdata: newForm,
+        });
     };
     const firstName = props.data?.sponsorId?.firstName;
     const lastName = props.data?.sponsorId?.lastName;
@@ -242,9 +255,9 @@ SupportModal.propTypes = {
     modalOpen: PropTypes.bool,
     toggleModal: PropTypes.func,
     modalId: PropTypes.string,
-    getSingleScholarship: PropTypes.func,
     requesting: PropTypes.bool,
     data: PropTypes.object,
+    supportScholarship: PropTypes.func,
 };
 const mapStateToProps = state => {
     return {
@@ -254,6 +267,6 @@ const mapStateToProps = state => {
     };
 };
 const mapDispatchToProps = dispatch =>
-    bindActionCreators({ toggleModal }, dispatch);
+    bindActionCreators({ toggleModal, supportScholarship }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SupportModal);

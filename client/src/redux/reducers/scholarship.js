@@ -15,6 +15,11 @@ const initialState = {
         error: null,
         success: false,
     },
+    supportScholarship: {
+        requesting: false,
+        error: null,
+        success: false,
+    },
     scholarships: [],
     scholarship: {},
 };
@@ -92,6 +97,36 @@ export default (state = initialState, action) => {
         case types.GET_SINGLE_SCHOLARSHIP_FAILURE:
             return Object.assign({}, state, {
                 singleScholarship: {
+                    requesting: false,
+                    error: action.payload,
+                    success: false,
+                },
+            });
+        case types.SUPPORT_SCHOLARSHIP_REQUEST:
+            return Object.assign({}, state, {
+                supportScholarship: {
+                    requesting: true,
+                    error: null,
+                    success: false,
+                },
+            });
+        case types.SUPPORT_SCHOLARSHIP_SUCCESS:
+            return Object.assign({}, state, {
+                supportScholarship: {
+                    requesting: false,
+                    error: null,
+                    success: true,
+                },
+                scholarships: state.scholarships.map(s => {
+                    if (s._id === action.payload._id) {
+                        return action.payload;
+                    }
+                    return s;
+                }),
+            });
+        case types.SUPPORT_SCHOLARSHIP_FAILURE:
+            return Object.assign({}, state, {
+                supportScholarship: {
                     requesting: false,
                     error: action.payload,
                     success: false,
